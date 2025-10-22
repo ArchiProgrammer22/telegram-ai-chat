@@ -1,0 +1,16 @@
+{
+    "name": "telegram-ai-bot",
+    "version" : "1.0.0",
+    "description": "A telegram bot to communicate with AI",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "telegraf": "^4.16.1",
+        "express": "^4.19.2"
+    },
+    "keywords": ["telegram", "telegraf", "bot"],
+    "author": "me",
+    "license": "ISC"
+}
