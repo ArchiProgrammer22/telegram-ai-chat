@@ -13,7 +13,7 @@ class ChatService {
     }
 
     addMessage(chatId, role, parts) {
-        const history = this.getHistory(chatId); // Получаем (или создаем) историю
+        const history = this.getHistory(chatId);
         
         const messageParts = Array.isArray(parts) ? parts : [parts];
         
