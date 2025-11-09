@@ -1,7 +1,7 @@
 class GeminiService {
-    constructor(apiKey, model = 'gemini-2.5-flash-preview-09-2025') {
+    constructor(apiKey, model = 'gemini-1.5-flash-latest') { // Примітка: Оновив модель до рекомендованої 'latest'
         if (!apiKey) {
-            console.warn('Warning: GEMINI_API_KEY is not set. Service will be in placeholder mode.');
+            console.warn('Warning: GEMINI_API_KEY is not set. Service will be in placeholder mode.'); // Попередження: GEMINI_API_KEY не встановлено. Сервіс буде в режимі-заглушці.
         }
         this.apiKey = apiKey;
         this.apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.apiKey}`;
@@ -10,7 +10,7 @@ class GeminiService {
 
     async generateContent(prompt, history = [], base64Image = null, mimeType = null) {
         if (!this.apiKey) {
-            return `(API Key Missing) Запрос: "${prompt}". Установите GEMINI_API_KEY для работы.`;
+            return `(API Key Missing) Запит: "${prompt}". Встановіть GEMINI_API_KEY для роботи.`; // (Відсутній API Key) Запит: "${prompt}". Встановіть GEMINI_API_KEY для роботи.
         }
 
         const userParts = [{ text: prompt }];
@@ -27,7 +27,7 @@ class GeminiService {
             contents: [...history, { role: "user", parts: userParts }],
             tools: [{ "google_search": {} }],
             systemInstruction: {
-                parts: [{ text: "You are a friendly, helpful, and concise Telegram chatbot. Respond conversationally to the user's questions." }]
+                parts: [{ text: "You are a friendly, helpful, and concise Telegram chatbot. Respond conversationally to the user's questions." }] // Ти — дружній, корисний і лаконічний Telegram-чатбот. Відповідай на запитання користувача у розмовному стилі.
             },
         };
 
@@ -42,41 +42,41 @@ class GeminiService {
                 });
 
                 if (response.status === 429) {
-                    throw new Error('Rate limit exceeded');
+                    throw new Error('Rate limit exceeded'); // Перевищено ліміт запитів
                 }
 
                 if (!response.ok) {
-                    throw new Error(`API returned status ${response.status}`);
+                    throw new Error(`API returned status ${response.status}`); // API повернув статус ${response.status}
                 }
 
                 const result = await response.json();
                 const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                
+
                 if (!text && result.candidates?.[0]?.finishReason === 'SAFETY') {
-                     console.warn("Gemini response blocked for safety reasons.");
-                     return "Я не могу ответить на это, так как запрос нарушает правила безопасности. 🤷";
+                     console.warn("Gemini response blocked for safety reasons."); // Відповідь Gemini заблоковано з міркувань безпеки.
+                     return "Я не можу відповісти на це, оскільки запит порушує правила безпеки. 🤷";
                 }
 
                 if (text) {
-                    return text; // Успех!
+                    return text; // Успіх!
                 } else {
-                    console.error("Invalid Gemini response structure:", JSON.stringify(result, null, 2));
-                    return "Я не смог сгенерировать четкий ответ, попробуйте спросить иначе.";
+                    console.error("Invalid Gemini response structure:", JSON.stringify(result, null, 2)); // Невірна структура відповіді Gemini:
+                    return "Я не зміг згенерувати чітку відповідь, спробуйте запитати інакше.";
                 }
 
             } catch (error) {
                 lastError = error;
                 const delay = Math.pow(2, attempts + 1) * 1000;
-                console.warn(`Attempt ${attempts + 1} failed: ${error.message}. Retrying in ${delay}ms...`);
-                
+                console.warn(`Attempt ${attempts + 1} failed: ${error.message}. Retrying in ${delay}ms...`); // Спроба ${attempts + 1} не вдалася: ${error.message}. Повтор через ${delay}мс...
+
                 if (attempts < this.maxRetries - 1) {
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
         }
-        
-        console.error("Gemini API call failed after max retries.", lastError);
-        return `🤖 (Error) AI-сервис сейчас недоступен. Попробуйте позже.`;
+
+        console.error("Gemini API call failed after max retries.", lastError); // Виклик Gemini API не вдався після максимальної кількості спроб.
+        return `🤖 (Error) AI-сервіс зараз недоступний. Спробуйте пізніше.`; // 🤖 (Помилка) AI-сервіс зараз недоступний. Спробуйте пізніше.
     }
 }
 
