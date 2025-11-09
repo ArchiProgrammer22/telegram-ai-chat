@@ -1,5 +1,5 @@
 class GeminiService {
-    constructor(apiKey, model = 'gemini-1.5-flash-latest') { // Примітка: Оновив модель до рекомендованої 'latest'
+    constructor(apiKey, model = 'gemini-2.5-flash-preview-09-2025') {
         if (!apiKey) {
             console.warn('Warning: GEMINI_API_KEY is not set. Service will be in placeholder mode.'); // Попередження: GEMINI_API_KEY не встановлено. Сервіс буде в режимі-заглушці.
         }
