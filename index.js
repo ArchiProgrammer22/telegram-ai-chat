@@ -15,7 +15,7 @@ if (!token) {
 }
 
 const geminiService = new GeminiService(GEMINI_API_KEY);
-const chatService = new ChatService(10); // Храним 10 последних сообщений (5 пар)
+const chatService = new ChatService(10);
 
 const telegramBot = new TelegramBot(token, geminiService, chatService);
 
