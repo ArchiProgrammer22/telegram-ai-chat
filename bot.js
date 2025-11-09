@@ -20,9 +20,9 @@ class TelegramBot {
 
     handleStart = (ctx) => {
         ctx.reply(
-            `Привет, ${ctx.from.first_name}! Я бот с Gemini AI.
-Я могу отвечать на вопросы, анализировать фото и помнить наш разговор.
-Используй /clear, чтобы очистить историю чата.`
+            `Привіт, ${ctx.from.first_name}! Я бот із Gemini AI.
+Я можу відповідати на запитання, аналізувати фото та пам'ятати нашу розмову.
+Використовуй /clear, щоб очистити історію чату.`
         );
         this.chatService.clearHistory(ctx.chat.id);
     };
@@ -30,9 +30,9 @@ class TelegramBot {
     handleClear = (ctx) => {
         const chatId = ctx.chat.id;
         if (this.chatService.clearHistory(chatId)) {
-            ctx.reply('🧹 История чата очищена. Начнем сначала!');
+            ctx.reply('🧹 Історію чату очищено. Почнемо спочатку!');
         } else {
-            ctx.reply('История чата уже пуста.');
+            ctx.reply('Історія чату вже порожня.');
         }
     };
 
@@ -54,25 +54,25 @@ class TelegramBot {
 
         } catch (err) {
             console.error(`Error processing text message for chat ${chatId}:`, err);
-            ctx.reply('❌ Ой, произошла ошибка. Попробуйте еще раз.');
+            ctx.reply('❌ Ой, сталася помилка. Спробуйте ще раз.');
         }
     };
-    
+
     handlePhoto = async (ctx) => {
         const chatId = ctx.chat.id;
-        const caption = ctx.message.caption || "Опиши это изображение";
+        const caption = ctx.message.caption || "Опиши це зображення";
         const photo = ctx.message.photo.pop();
         const fileId = photo.file_id;
 
         try {
             await ctx.sendChatAction('upload_photo');
-            
+
             const history = this.chatService.getHistory(chatId);
 
             const fileLink = await ctx.telegram.getFileLink(fileId);
             const imageResponse = await fetch(fileLink.href);
-            if (!imageResponse.ok) throw new Error('Не удалось скачать изображение с Telegram');
-            
+            if (!imageResponse.ok) throw new Error('Не вдалося завантажити зображення з Telegram');
+
             const arrayBuffer = await imageResponse.arrayBuffer();
             const base64Image = Buffer.from(arrayBuffer).toString('base64');
             const mimeType = "image/jpeg";
@@ -90,17 +90,17 @@ class TelegramBot {
 
         } catch (err) {
             console.error(`Error processing photo message for chat ${chatId}:`, err);
-            ctx.reply('❌ Ой, не удалось обработать ваше изображение.');
+            ctx.reply('❌ Ой, не вдалося обробити ваше зображення.');
         }
     };
 
     handleSticker = (ctx) => {
-        ctx.reply('👍 Классный стикер!');
+        ctx.reply('👍 Класний стікер!');
     };
 
     handleError = (err, ctx) => {
         console.error(`Unhandled error for ${ctx.updateType}:`, err);
-        ctx.reply('Ой! Я столкнулся с необработанной ошибкой.');
+        ctx.reply('Ой! Я зіткнувся з необробленою помилкою.');
     };
 
     getWebhookCallback(path) {
